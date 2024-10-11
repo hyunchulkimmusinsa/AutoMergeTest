@@ -1,0 +1,38 @@
+name: Set Milestone on Pull Request
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  set-milestone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get milestone ID by name
+        id: get-milestone-id
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: milestones } = await github.rest.issues.listMilestones({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const milestone = milestones.find(m => m.title === '1.1.0'); // Replace with your milestone name
+            if (milestone) {
+              core.setOutput('milestoneId', milestone.number);
+            } else {
+              core.setFailed('Milestone not found.');
+            }
+
+      - name: Set milestone
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              milestone: ${{ steps.get-milestone-id.outputs.milestoneId }}
+            })
