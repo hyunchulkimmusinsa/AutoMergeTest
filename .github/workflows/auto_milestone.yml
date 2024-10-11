@@ -8,6 +8,15 @@ jobs:
   set-milestone:
     runs-on: ubuntu-latest
     steps:
+      - name: Get main version name
+        id: get main version name
+        run: |
+          # file_path="build-logic/convention/src/main/java/config/MusinsaConfig.kt"  # 파일 경로 지정
+          # main_version=$(git show origin/main:$file_path | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d ' ')
+          main_version="1.1.0"
+          echo "Main version : $main_version"
+          echo "VERSION_NAME=$main_version" >> $GITHUB_ENV
+
       - name: Get milestone ID by name
         id: get-milestone-id
         uses: actions/github-script@v7
@@ -18,7 +27,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
-            const milestone = milestones.find(m => m.title === '1.1.0'); // Replace with your milestone name
+            const milestone = milestones.find(m => m.title === ${{ env.VERSION_NAME }}); // Replace with your milestone name
             if (milestone) {
               core.setOutput('milestoneId', milestone.number);
             } else {
