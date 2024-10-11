@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get main version name
-        id: get main version name
+        id: get-main-version-name
         run: |
           # file_path="build-logic/convention/src/main/java/config/MusinsaConfig.kt"  # 파일 경로 지정
           # main_version=$(git show origin/main:$file_path | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d ' ')
