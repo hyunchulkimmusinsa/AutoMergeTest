@@ -27,7 +27,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
-            const milestone = milestones.find(m => m.title === ${{ process.env.VERSION_NAME }}); // Replace with your milestone name
+            const versionName = process.env.VERSION_NAME;
+            const milestone = milestones.find(m => m.title === versionName); // Replace with your milestone name
             if (milestone) {
               core.setOutput('milestoneId', milestone.number);
             } else {
